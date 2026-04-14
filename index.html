@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Jump Tracker AI - Enhanced</title>
     
     <!-- TensorFlow.js e Pose Detection -->
@@ -54,10 +54,16 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--primary-gradient);
             min-height: 100vh;
+            min-height: 100dvh;
             color: white;
             overflow-x: hidden;
         }
@@ -76,6 +82,9 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
         }
         
         .top-menu {
@@ -88,19 +97,39 @@
             border-bottom: 1px solid var(--glass-border);
             z-index: 1000;
             box-shadow: var(--shadow-heavy);
+            padding-top: env(safe-area-inset-top);
         }
         
         .menu-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px max(16px, env(safe-area-inset-right)) 15px max(16px, env(safe-area-inset-left));
             max-width: 1400px;
             margin: 0 auto;
         }
         
-        .menu-left .menu-title { font-size: 1.5rem; font-weight: 700; color: white; cursor: pointer; }
-        .menu-center { display: flex; gap: 15px; }
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+        
+        .menu-left .menu-title {
+            font-size: clamp(0.95rem, 3.5vw, 1.5rem);
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .menu-center { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; justify-content: center; }
         
         .menu-btn {
             background: rgba(255, 255, 255, 0.1);
@@ -116,12 +145,12 @@
         
         .menu-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
         .menu-btn.active { background: var(--success-gradient); border-color: transparent; }
-        .menu-right { display: flex; }
+        .menu-right { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
         .menu-btn.special { background: var(--warning-gradient); border-color: transparent; }
         
         .page-section {
             display: none;
-            margin-top: 100px;
+            margin-top: clamp(88px, 22vw, 110px);
             animation: fadeInUp 0.6s ease-out;
         }
         
@@ -129,26 +158,28 @@
             display: block;
         }
         
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 10px; }
-        .header p { font-size: 1.2rem; opacity: 0.9; }
+        .header { text-align: center; margin-bottom: 40px; padding: 0 4px; }
+        .header h1 { font-size: clamp(1.35rem, 5vw, 2.8rem); font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+        .header p { font-size: clamp(0.9rem, 3vw, 1.2rem); opacity: 0.9; }
         
         .ranking-section {
             background: var(--glass-bg);
             border-radius: var(--border-radius);
-            padding: 40px;
-            margin: 40px 0;
+            padding: clamp(16px, 4vw, 40px);
+            margin: clamp(16px, 4vw, 40px) 0;
             backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-medium);
         }
         
-        .ranking-section h2 { text-align: center; margin-bottom: 30px; font-size: 2rem; }
+        .ranking-section h2 { text-align: center; margin-bottom: 30px; font-size: clamp(1.15rem, 4vw, 2rem); }
         
         .ranking-item-main {
             display: flex;
             align-items: center;
-            padding: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: clamp(12px, 3vw, 20px);
             background: rgba(255,255,255,0.08);
             border-radius: 15px;
             margin-bottom: 15px;
@@ -163,11 +194,22 @@
             border-color: var(--glass-border);
         }
         
-        .ranking-position-main { font-size: 2rem; font-weight: 800; margin-right: 25px; min-width: 70px; text-align: center; color: #4facfe; }
+        .ranking-item-main .athlete-info {
+            flex: 1 1 140px;
+            min-width: 0;
+        }
+        
+        .ranking-item-main .athlete-name {
+            font-size: clamp(1rem, 3.5vw, 1.35rem);
+            font-weight: 600;
+            word-break: break-word;
+        }
+        
+        .ranking-position-main { font-size: clamp(1.25rem, 4vw, 2rem); font-weight: 800; margin-right: 8px; min-width: 48px; text-align: center; color: #4facfe; flex-shrink: 0; }
         .ranking-name-main { font-size: 1.4rem; font-weight: 600; margin-bottom: 5px; }
-        .ranking-details-main { font-size: 0.9rem; opacity: 0.8; display: flex; align-items: center; gap: 15px; }
+        .ranking-details-main { font-size: 0.9rem; opacity: 0.8; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .jump-count-badge { background: var(--warning-gradient); color: #333; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .ranking-height-main { font-size: 1.8rem; font-weight: 700; color: #4facfe; margin-left: auto; }
+        .ranking-height-main { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 700; color: #4facfe; margin-left: auto; flex-shrink: 0; }
         
         .add-athlete-section { text-align: center; margin: 50px 0; }
         .add-athlete-btn {
@@ -198,8 +240,8 @@
         .athlete-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-medium); }
         .athlete-info { display: flex; align-items: center; gap: 20px; cursor: pointer; flex-grow: 1; }
         .athlete-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--success-gradient); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
-        .athlete-details h3 { font-size: 1.2rem; }
-        .athlete-details p { opacity: 0.8; font-size: 0.9rem; }
+        .athlete-details h3 { font-size: clamp(1rem, 3vw, 1.2rem); word-break: break-word; }
+        .athlete-details p { opacity: 0.8; font-size: 0.9rem; word-break: break-word; }
         .athlete-actions button { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: var(--transition); margin-left: 10px; }
         .athlete-actions button:hover { background: rgba(255,255,255,0.2); }
         
@@ -261,7 +303,7 @@
         .camera-section {
             background: var(--glass-bg);
             border-radius: var(--border-radius);
-            padding: 30px;
+            padding: clamp(14px, 4vw, 30px);
             backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-medium);
@@ -280,6 +322,7 @@
         
         #video {
             width: 100%;
+            max-width: 100%;
             height: auto;
             display: block;
             border-radius: 15px;
@@ -320,7 +363,7 @@
         .live-status-panel {
             background: var(--glass-bg);
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: clamp(16px, 4vw, 25px);
             backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-medium);
@@ -417,15 +460,15 @@
         
         .stats-overview {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+            gap: clamp(12px, 3vw, 20px);
             margin-bottom: 30px;
         }
         
         .stat-card {
             background: var(--glass-bg);
             border-radius: 15px;
-            padding: 25px;
+            padding: clamp(14px, 4vw, 25px);
             text-align: center;
             backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
@@ -457,8 +500,8 @@
         
         .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: clamp(14px, 3vw, 30px);
         }
         
         .chart-card {
@@ -477,64 +520,57 @@
             font-weight: 600;
         }
         
-        .chart-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        
         .chart-container canvas {
             width: 100% !important;
             height: 100% !important;
             display: block;
         }
         
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .chart-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .chart-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-        
         .jump-history { margin-top: 40px; }
         .jump-list { max-height: 400px; overflow-y: auto; padding-right: 10px; }
-        .jump-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+        .jump-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(255,255,255,0.08);
+            padding: clamp(12px, 3vw, 15px);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
         .jump-height { font-size: 1.2rem; font-weight: 600; color: #4facfe; }
         .jump-date { font-size: 0.9rem; opacity: 0.7; }
         .delete-jump-btn { background: rgba(255, 82, 82, 0.2); color: #ff5252; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; transition: var(--transition); }
         .delete-jump-btn:hover { background: rgba(255, 82, 82, 0.4); }
         
         .modal {
-            display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
-            align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
         }
         .modal-content {
             background: var(--dark-gradient); 
-            padding: 30px; 
+            padding: clamp(18px, 5vw, 30px); 
             border-radius: 20px; 
-            width: 90%; 
-            max-width: 450px;
+            width: min(100%, 450px); 
+            max-width: calc(100vw - 24px);
+            max-height: min(90vh, 90dvh);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             box-shadow: var(--shadow-heavy); 
             animation: fadeInUp 0.4s; 
             border: 1px solid var(--glass-border);
+            margin: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h3 { font-size: 1.5rem; color: white; }
@@ -558,7 +594,7 @@
             background: #2c3e50;
             color: white;
         }
-        .modal-footer { text-align: right; margin-top: 30px; }
+        .modal-footer { text-align: right; margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         .modal-btn {
             padding: 12px 25px; 
             border: none; 
@@ -606,36 +642,68 @@
         
         .chart-container {
             position: relative;
-            height: 400px;
+            height: clamp(200px, 42vw, 400px);
             width: 100%;
+            max-width: 100%;
             background: var(--glass-bg);
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: clamp(8px, 2vw, 20px);
             backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             margin-top: 20px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
         }
         
-        @media (max-width: 768px) {
-            .detection-layout {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-overview {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .gender-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 16px 0 24px;
+        }
+        
+        .gender-tabs .gender-tab {
+            margin-left: 0 !important;
+        }
+        
+        .charts-section h2 {
+            font-size: clamp(1.05rem, 4vw, 1.5rem);
+            line-height: 1.3;
+            padding: 0 8px;
+        }
+        
+        .add-athlete-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .add-athlete-toolbar .add-athlete-btn,
+        .add-athlete-toolbar .btn-test-dashboards {
+            margin: 0;
+        }
+        
+        .btn-test-dashboards {
+            background: var(--warning-gradient);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
         }
         
         /* Dashboard Grid Styles */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: clamp(14px, 3vw, 25px);
             margin-top: 20px;
         }
         
@@ -668,21 +736,150 @@
             font-size: 1.2rem;
         }
         
-        .chart-container {
-            width: 100%;
-            height: 250px;
-            position: relative;
-        }
-        
-        /* Responsive adjustments */
         @media (max-width: 768px) {
+            .detection-layout {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .charts-grid,
             .dashboard-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 16px;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            
+            .menu-container {
+                justify-content: center;
+            }
+            
+            .menu-left {
+                flex: 1 1 100%;
+                justify-content: center;
+            }
+            
+            .menu-center,
+            .menu-right {
+                flex: 1 1 auto;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .menu-btn {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 140px;
+                padding: 10px 14px;
+                font-size: 0.82rem;
+            }
+            
+            .ranking-item-main:hover {
+                transform: none;
+            }
+            
+            .ranking-height-main {
+                width: 100%;
+                margin-left: 0;
+                text-align: right;
+                padding-top: 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+            
+            .athlete-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+            
+            .athlete-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: stretch;
+            }
+            
+            .athlete-actions .action-btn {
+                flex: 1 1 calc(50% - 4px);
+                margin-left: 0;
+                text-align: center;
+            }
+            
+            .dashboard-header h2 {
+                font-size: clamp(1.2rem, 5vw, 1.8rem);
+            }
+            
+            .jump-history h2 {
+                font-size: clamp(1.1rem, 4vw, 1.5rem);
             }
             
             .chart-container {
-                height: 200px;
+                height: clamp(200px, 55vw, 280px);
+            }
+            
+            .add-athlete-btn {
+                padding: 16px 24px;
+                font-size: 1rem;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .btn-test-dashboards {
+                width: 100%;
+            }
+            
+            .start-btn {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page-section {
+                margin-top: clamp(76px, 28vw, 100px);
+            }
+            
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .pose-points-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-btn {
+                flex: 1 1 100%;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .modal-footer .modal-btn {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .gender-tab {
+                flex: 1 1 calc(50% - 6px);
+                justify-content: center;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (hover: hover) and (pointer: fine) {
+            .ranking-item-main:hover {
+                transform: translateX(10px);
+            }
+        }
+        
+        @media (hover: none) {
+            .chart-card:hover {
+                transform: none;
             }
         }
     </style>
@@ -712,11 +909,11 @@
             </div>
             
             <!-- Tabs de Gênero -->
-            <div class="gender-tabs" style="display: flex; justify-content: center; margin: 20px 0 30px;">
+            <div class="gender-tabs">
                 <button id="maleTabBtn" class="gender-tab active" onclick="switchGenderTab('male')">
                     <i class="fas fa-male"></i> Masculino
                 </button>
-                <button id="femaleTabBtn" class="gender-tab" onclick="switchGenderTab('female')" style="margin-left: 15px;">
+                <button id="femaleTabBtn" class="gender-tab" onclick="switchGenderTab('female')">
                     <i class="fas fa-female"></i> Feminino
                 </button>
             </div>
@@ -854,11 +1051,11 @@
             </div>
             
             <!-- Botão para adicionar novo atleta -->
-            <div class="add-athlete-section" style="text-align: center; margin: 30px 0;">
-                <button onclick="showAthleteModal()" class="add-athlete-btn">
+            <div class="add-athlete-section add-athlete-toolbar">
+                <button type="button" onclick="showAthleteModal()" class="add-athlete-btn">
                     <i class="fas fa-plus-circle"></i> Adicionar Novo Atleta
                 </button>
-                <button onclick="testDashboards()" style="margin-left: 20px; background: var(--warning-gradient); color: white; border: none; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-weight: 600;">
+                <button type="button" onclick="testDashboards()" class="btn-test-dashboards">
                     <i class="fas fa-chart-bar"></i> Testar Dashboards
                 </button>
             </div>
@@ -1096,7 +1293,6 @@
         let detector = null;
         let isDetecting = false;
         let animationId = null;
-        let jumpStartTime = null;
         let isInAir = false;
         let poseQualityScore = 0;
         let detectedKeypoints = {};
@@ -1104,16 +1300,34 @@
         // Variáveis melhoradas para detecção de saltos
         let calibratedGroundLevel = null; // Nível do chão calibrado (em pixels Y)
         let isCalibrated = false;
-        let maxFeetHeight = null; // Altura máxima dos pés durante o salto (menor valor Y = mais alto)
-        let jumpStartFeetY = null; // Posição Y inicial dos pés quando o salto começa
-        let feetYHistory = []; // Histórico de posições Y dos pés para suavização
-        let feetVelocityHistory = []; // Histórico de velocidades (mudança de posição entre frames)
-        let feetOffGroundFrames = 0; // Contador de frames consecutivos com pés fora do chão
-        let feetOnGroundFrames = 0; // Contador de frames consecutivos com pés no chão
         let calibrationHeight = null; // Altura da pessoa para conversão pixel->cm
         let calibratedBodyHeightPixels = null; // Altura total do corpo em pixels na calibração
         let calibratedTopHeadY = null; // Posição Y do topo da cabeça na calibração
-        let lastFeetY = null; // Posição anterior dos pés para calcular velocidade
+        
+        // --- Detecção de salto por CoM (cinemática); Y do canvas cresce para baixo ---
+        let baselineCoMY = null;
+        let standingComYBuffer = [];
+        let lastCoMY = null;
+        let lastCoMFrameTimeMs = null;
+        let vyHistory = [];
+        let takeoffVyNegativeFrames = 0;
+        let takeoffTime = null;
+        let landingTime = null;
+        let landingConfirmedFrames = 0;
+        let comJumpStateLogged = '';
+        /** Últimos pares (performance.now ms, CoM_Y) para interpolação sub-frame */
+        const COM_HISTORY_MAX = 4;
+        let comHistoryBuffer = [];
+        /** Opcional: comprimento do fêmur (cm) vindo do BD / seleção de atleta; null = só Hang Time. `var` expõe no console: currentAthleteFemurCm = 45 */
+        var currentAthleteFemurCm = null;
+        /** Escala dinâmica: px/cm a partir do fêmur (média móvel na fase Preparando), só se currentAthleteFemurCm definido */
+        const FEMUR_SCORE_MIN = 0.6;
+        const PIXELS_PER_CM_SAMPLES_MAX = 12;
+        const PIXELS_PER_CM_MIN_SAMPLES = 3;
+        let pixelsPerCmSamples = [];
+        let dynamicPixelsPerCm = null;
+        /** Menor CoM_Y (apex) durante o voo */
+        let minCoMYInFlight = null;
         
         // Variáveis para calibração automática
         let stablePositionHistory = []; // Histórico de posições para detectar estabilidade
@@ -1122,6 +1336,193 @@
         let lastCalibrationTime = 0; // Timestamp da última calibração
         let lastJumpTime = 0; // Timestamp do último salto registrado
         let calibrationLocked = false; // Lock para evitar recalibração após saltos
+
+        /**
+         * Filtro 1D para suavizar coordenada Y (reduz jitter do MoveNet).
+         * Suporta EMA ou passa-baixa de 1ª ordem (equivalente RC / Butterworth de ordem 1 discretizado).
+         */
+        class SignalFilter {
+            /**
+             * @param {object} opts
+             * @param {'ema'|'butterworth1'} [opts.type='ema'] — butterworth1 usa mesma recorrência de 1ª ordem com alpha derivado de fc.
+             * @param {number} [opts.alpha] — 0..1, maior = menos suavização e menos lag (ex.: 0.35–0.5).
+             * @param {number} [opts.cutoffHz] — se definido com sampleRateHz, calcula alpha (ignorado se alpha explícito).
+             * @param {number} [opts.sampleRateHz=30] — taxa aproximada do loop de pose.
+             */
+            constructor(opts = {}) {
+                this.type = opts.type === 'butterworth1' ? 'butterworth1' : 'ema';
+                let alpha = typeof opts.alpha === 'number' ? opts.alpha : null;
+                if (alpha === null && typeof opts.cutoffHz === 'number' && opts.cutoffHz > 0) {
+                    const fs = typeof opts.sampleRateHz === 'number' && opts.sampleRateHz > 0 ? opts.sampleRateHz : 30;
+                    alpha = SignalFilter.alphaFromFirstOrderLowPass(opts.cutoffHz, fs);
+                }
+                this.alpha = Math.min(1, Math.max(0.05, alpha != null ? alpha : 0.38));
+                this.prevFiltered = null;
+            }
+
+            /** Alpha para LP de 1ª ordem: y = a*x + (1-a)*y_prev, com constante de tempo RC = 1/(2*pi*fc). */
+            static alphaFromFirstOrderLowPass(cutoffHz, sampleRateHz) {
+                const dt = 1 / sampleRateHz;
+                const rc = 1 / (2 * Math.PI * cutoffHz);
+                return dt / (rc + dt);
+            }
+
+            /** Próximo valor filtrado (uma amostra por frame). */
+            filterNext(raw) {
+                if (raw == null || !Number.isFinite(raw)) return raw;
+                if (this.prevFiltered === null) {
+                    this.prevFiltered = raw;
+                    return raw;
+                }
+                const y = this.alpha * raw + (1 - this.alpha) * this.prevFiltered;
+                this.prevFiltered = y;
+                return y;
+            }
+
+            reset() {
+                this.prevFiltered = null;
+            }
+        }
+
+        /** Índices MoveNet THUNDER: nariz, ombros, quadris, joelhos, tornozelos. */
+        const MOVENET_Y_FILTER_INDICES = new Set([0, 5, 6, 11, 12, 13, 14, 15, 16]);
+
+        class KeypointYFilterBank {
+            constructor(filterOptions = {}) {
+                this.filters = new Map();
+                for (const i of MOVENET_Y_FILTER_INDICES) {
+                    this.filters.set(i, new SignalFilter(filterOptions));
+                }
+            }
+
+            /**
+             * @param {Array<{x:number,y:number,name:string,score:number}>} keypoints
+             * @returns {typeof keypoints} novo array com Y suavizado nos índices críticos.
+             */
+            apply(keypoints) {
+                if (!keypoints || keypoints.length === 0) return keypoints;
+                return keypoints.map((kp, i) => {
+                    if (!this.filters.has(i)) return kp;
+                    const y = this.filters.get(i).filterNext(kp.y);
+                    return { ...kp, y };
+                });
+            }
+
+            reset() {
+                this.filters.forEach(f => f.reset());
+            }
+        }
+
+        const keypointYFilterBank = new KeypointYFilterBank({
+            type: 'butterworth1',
+            cutoffHz: 7,
+            sampleRateHz: 30
+        });
+
+        /** Score mínimo para usar um keypoint no CoM (alinhado ao restante da detecção). */
+        const COM_KP_MIN_SCORE = 0.25;
+
+        function kpByIndex(keypoints, index) {
+            return keypoints && keypoints[index] ? keypoints[index] : null;
+        }
+
+        /** Média aritmética de Y entre keypoints com score suficiente. */
+        function meanYOfKeypoints(keypointsList, minScore = COM_KP_MIN_SCORE) {
+            const ys = keypointsList.filter(k => k && k.score >= minScore && Number.isFinite(k.y)).map(k => k.y);
+            if (ys.length === 0) return null;
+            return ys.reduce((a, b) => a + b, 0) / ys.length;
+        }
+
+        /**
+         * Centro de massa aproximado (eixo Y), em pixels, a partir dos keypoints já filtrados em Y.
+         * Segmentos: cabeça 0.07 (nariz), tronco 0.45 (ombros+quadris), coxas 0.28 (quadris+joelhos),
+         * pernas 0.12 (joelhos+tornozelos). Pesos são renormalizados se algum segmento faltar.
+         * @param {Array<{x:number,y:number,name:string,score:number}>} keypoints
+         * @returns {number|null} CoM_Y ou null se não houver dados mínimos (fallback: quadril).
+         */
+        function calculateCoMY(keypoints) {
+            if (!keypoints || keypoints.length < 17) return null;
+
+            const nose = kpByIndex(keypoints, 0);
+            const ls = kpByIndex(keypoints, 5);
+            const rs = kpByIndex(keypoints, 6);
+            const lh = kpByIndex(keypoints, 11);
+            const rh = kpByIndex(keypoints, 12);
+            const lk = kpByIndex(keypoints, 13);
+            const rk = kpByIndex(keypoints, 14);
+            const la = kpByIndex(keypoints, 15);
+            const ra = kpByIndex(keypoints, 16);
+
+            const hipY = meanYOfKeypoints([lh, rh]);
+            if (hipY === null) return null;
+
+            let headY = null;
+            if (nose && nose.score >= COM_KP_MIN_SCORE) headY = nose.y;
+            else headY = meanYOfKeypoints([ls, rs]) ?? hipY;
+
+            let trunkY = meanYOfKeypoints([ls, rs, lh, rh]);
+            if (trunkY === null) trunkY = meanYOfKeypoints([ls, rs]) ?? hipY;
+
+            let thighY = meanYOfKeypoints([lh, rh, lk, rk]);
+            if (thighY === null) thighY = hipY;
+
+            let legY = meanYOfKeypoints([lk, rk, la, ra]);
+            if (legY === null) legY = meanYOfKeypoints([lk, rk]) ?? hipY;
+
+            const W_HEAD = 0.07;
+            const W_TRUNK = 0.45;
+            const W_THIGH = 0.28;
+            const W_LEG = 0.12;
+
+            let sumW = 0;
+            let sumWY = 0;
+            const add = (w, y) => {
+                if (y == null || !Number.isFinite(y)) return;
+                sumW += w;
+                sumWY += w * y;
+            };
+
+            add(W_HEAD, headY);
+            add(W_TRUNK, trunkY);
+            add(W_THIGH, thighY);
+            add(W_LEG, legY);
+
+            if (sumW < 1e-6) return hipY;
+            return sumWY / sumW;
+        }
+
+        /** X médio dos quadris para ancorar o marcador visual do CoM. */
+        function averageHipXFromKeypoints(keypoints) {
+            if (!keypoints || keypoints.length < 17) return null;
+            const lh = kpByIndex(keypoints, 11);
+            const rh = kpByIndex(keypoints, 12);
+            if (lh && rh && lh.score >= COM_KP_MIN_SCORE && rh.score >= COM_KP_MIN_SCORE) {
+                return (lh.x + rh.x) / 2;
+            }
+            if (lh && lh.score >= COM_KP_MIN_SCORE) return lh.x;
+            if (rh && rh.score >= COM_KP_MIN_SCORE) return rh.x;
+            const nose = kpByIndex(keypoints, 0);
+            if (nose && nose.score >= 0.2) return nose.x;
+            return null;
+        }
+
+        /** Desenha o CoM no canvas (validação visual). */
+        function drawCoMMarker(keypoints) {
+            if (!ctx) return;
+            const comY = calculateCoMY(keypoints);
+            const comX = averageHipXFromKeypoints(keypoints);
+            if (comY == null || comX == null) return;
+
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 45, 45, 0.95)';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(comX, comY, 11, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+        }
 
         // --- ELEMENTOS DOM ---
         const videoEl = document.getElementById('video');
@@ -2239,11 +2640,17 @@
                         <div class="jump-stats">
                             <div class="jump-stat">
                                 <span class="stat-label">Altura:</span>
-                                <span class="stat-value">${jump.height.toFixed(1)} cm</span>
+                                <span class="stat-value">${jump.height.toFixed(1)} cm${
+                                    jump.heightDisplacementCm != null &&
+                                    jump.heightHangTimeCm != null &&
+                                    typeof jump.heightDisplacementCm === 'number'
+                                        ? ` <span style="opacity:0.85;font-size:0.88em;">(T: ${jump.heightHangTimeCm.toFixed(1)} | D: ${jump.heightDisplacementCm.toFixed(1)})</span>`
+                                        : ''
+                                }</span>
                             </div>
                             <div class="jump-stat">
                                 <span class="stat-label">Tempo no ar:</span>
-                                <span class="stat-value">${jump.airTime.toFixed(2)}s</span>
+                                <span class="stat-value">${typeof jump.airTime === 'number' ? jump.airTime.toFixed(3) : jump.airTime}s</span>
                             </div>
                         </div>
                     </div>
@@ -3278,6 +3685,22 @@
                 calibratedBodyHeightPixels = null;
                 calibratedTopHeadY = null;
                 lastJumpTime = 0;
+                keypointYFilterBank.reset();
+                baselineCoMY = null;
+                standingComYBuffer.length = 0;
+                lastCoMY = null;
+                lastCoMFrameTimeMs = null;
+                vyHistory.length = 0;
+                takeoffVyNegativeFrames = 0;
+                takeoffTime = null;
+                landingTime = null;
+                landingConfirmedFrames = 0;
+                isInAir = false;
+                comJumpStateLogged = '';
+                comHistoryBuffer.length = 0;
+                pixelsPerCmSamples.length = 0;
+                dynamicPixelsPerCm = null;
+                minCoMYInFlight = null;
                 document.getElementById('calibrationText').innerHTML = '⏳ Fique parado em frente à câmera para calibração automática...';
                 document.getElementById('calibrationStatus').style.background = 'rgba(255,255,255,0.05)';
                 
@@ -3300,6 +3723,22 @@
             }
             isDetecting = false;
             cancelAnimationFrame(animationId);
+            keypointYFilterBank.reset();
+            baselineCoMY = null;
+            standingComYBuffer.length = 0;
+            lastCoMY = null;
+            lastCoMFrameTimeMs = null;
+            vyHistory.length = 0;
+            takeoffVyNegativeFrames = 0;
+            takeoffTime = null;
+            landingTime = null;
+            landingConfirmedFrames = 0;
+            isInAir = false;
+            comJumpStateLogged = '';
+            comHistoryBuffer.length = 0;
+            pixelsPerCmSamples.length = 0;
+            dynamicPixelsPerCm = null;
+            minCoMYInFlight = null;
             startBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar Detecção';
             document.getElementById('mainStatus').innerHTML = '<i class="fas fa-info-circle"></i> Detecção parada.';
             
@@ -3330,8 +3769,9 @@
                 }
 
                 if (poses.length > 0) {
-                    const keypoints = poses[0].keypoints;
-                    // Armazena os keypoints para uso na calibração
+                    const rawKeypoints = poses[0].keypoints;
+                    const keypoints = keypointYFilterBank.apply(rawKeypoints);
+                    // Armazena os keypoints (já suavizados em Y nos índices críticos) para calibração e UI
                     detectedKeypoints = {};
                     keypoints.forEach(kp => {
                         detectedKeypoints[kp.name] = kp;
@@ -3344,6 +3784,7 @@
                     
                     processJump(keypoints);
                 } else {
+                    keypointYFilterBank.reset();
                     updatePoseStatus([]);
                     detectedKeypoints = {};
                     // Reseta variáveis de estabilidade se não há pessoa detectada
@@ -3396,6 +3837,8 @@
                     ctx.stroke();
                 }
             });
+
+            drawCoMMarker(keypoints);
         }
 
         // Função auxiliar para estimar posição dos pés quando tornozelos não são detectados
@@ -3439,334 +3882,462 @@
             return null;
         }
 
+        function resetCoMJumpKinematics() {
+            lastCoMY = null;
+            lastCoMFrameTimeMs = null;
+            vyHistory.length = 0;
+            takeoffVyNegativeFrames = 0;
+            landingConfirmedFrames = 0;
+            // comHistoryBuffer: mantido entre frames; limpar só após ciclo de salto / start / stop
+        }
+
+        function logCoMJumpState(state, detail = '') {
+            console.log('[Salto CoM] Estado: ' + (detail ? state + ' — ' + detail : state));
+        }
+
+        function pushComHistory(tMs, yVal) {
+            if (yVal == null || !Number.isFinite(yVal) || tMs == null || !Number.isFinite(tMs)) return;
+            comHistoryBuffer.push({ t: tMs, y: yVal });
+            while (comHistoryBuffer.length > COM_HISTORY_MAX) comHistoryBuffer.shift();
+        }
+
+        function clampMs(t, lo, hi) {
+            return Math.min(hi, Math.max(lo, t));
+        }
+
+        /** Cruzamento linear: y(ta)=ya, y(tb)=yb, retorna t onde y = crossingY. */
+        function linearCrossingMs(ta, ya, tb, yb, crossingY) {
+            if (!Number.isFinite(ta) || !Number.isFinite(tb)) return ta;
+            if (Math.abs(yb - ya) < 1e-9) return (ta + tb) / 2;
+            const u = (crossingY - ya) / (yb - ya);
+            return ta + u * (tb - ta);
+        }
+
+        /** Resolve sistema 3x3 (eliminação Gaussiana); null se singular. */
+        function solveLinear3x3(M, rhs) {
+            const A = [M[0].concat(rhs[0]), M[1].concat(rhs[1]), M[2].concat(rhs[2])];
+            for (let col = 0; col < 3; col++) {
+                let pivot = col;
+                for (let r = col + 1; r < 3; r++) {
+                    if (Math.abs(A[r][col]) > Math.abs(A[pivot][col])) pivot = r;
+                }
+                if (Math.abs(A[pivot][col]) < 1e-12) return null;
+                const tmp = A[col];
+                A[col] = A[pivot];
+                A[pivot] = tmp;
+                const div = A[col][col];
+                for (let c = col; c < 4; c++) A[col][c] /= div;
+                for (let r = 0; r < 3; r++) {
+                    if (r === col) continue;
+                    const f = A[r][col];
+                    for (let c = col; c < 4; c++) A[r][c] -= f * A[col][c];
+                }
+            }
+            return [A[0][3], A[1][3], A[2][3]];
+        }
+
+        /** Coeficientes a,b,c para y = a*τ² + b*τ + c com τ = t - tRef (mínimos quadrados). */
+        function leastSquaresQuadraticCoeffs(pts, tRef) {
+            let S4 = 0, S3 = 0, S2 = 0, S1 = 0, S0 = 0, S2y = 0, S1y = 0, S0y = 0;
+            for (const p of pts) {
+                const tau = p.t - tRef;
+                const y = p.y;
+                const t2 = tau * tau;
+                const t3 = t2 * tau;
+                const t4 = t3 * tau;
+                S4 += t4;
+                S3 += t3;
+                S2 += t2;
+                S1 += tau;
+                S0 += 1;
+                S2y += t2 * y;
+                S1y += tau * y;
+                S0y += y;
+            }
+            const M = [[S4, S3, S2], [S3, S2, S1], [S2, S1, S0]];
+            const r = [S2y, S1y, S0y];
+            return solveLinear3x3(M, r);
+        }
+
+        /** Raiz de a*τ² + b*τ + k = 0 dentro de [tauLo, tauHi]; null se inválida. */
+        function pickQuadraticRootInBracket(a, b, k, tauLo, tauHi) {
+            const roots = [];
+            if (Math.abs(a) < 1e-9) {
+                if (Math.abs(b) < 1e-9) return null;
+                roots.push(-k / b);
+            } else {
+                const D = b * b - 4 * a * k;
+                if (D < 0) return null;
+                const s = Math.sqrt(D);
+                roots.push((-b - s) / (2 * a), (-b + s) / (2 * a));
+            }
+            const pad = 0.02;
+            let best = null;
+            for (const tau of roots) {
+                if (!Number.isFinite(tau)) continue;
+                if (tau >= tauLo - pad && tau <= tauHi + pad) {
+                    if (best === null || Math.abs(tau - (tauLo + tauHi) / 2) < Math.abs(best - (tauLo + tauHi) / 2)) {
+                        best = tau;
+                    }
+                }
+            }
+            return best;
+        }
+
+        /**
+         * Estima instante (ms, performance.now) em que CoM_Y cruza crossingY.
+         * @param {'decreasing'|'increasing'} direction decrescente = salto (Y diminui)
+         */
+        function interpolateCoMCrossingMs(buffer, crossingY, direction) {
+            if (!buffer || buffer.length < 2) return null;
+            const pts = buffer.slice().sort((a, b) => a.t - b.t);
+            const tMin = pts[0].t;
+            const tMax = pts[pts.length - 1].t;
+            const windowLo = tMin - 50;
+            const windowHi = tMax + 50;
+
+            let segI = -1;
+            for (let i = 0; i < pts.length - 1; i++) {
+                const ya = pts[i].y - crossingY;
+                const yb = pts[i + 1].y - crossingY;
+                if (ya * yb > 0) continue;
+                if (direction === 'decreasing' && !(pts[i + 1].y < pts[i].y)) continue;
+                if (direction === 'increasing' && !(pts[i + 1].y > pts[i].y)) continue;
+                segI = i;
+                break;
+            }
+
+            let tLinear;
+            if (segI < 0) {
+                if (pts.length >= 2) {
+                    const p0 = pts[pts.length - 2];
+                    const p1 = pts[pts.length - 1];
+                    tLinear = linearCrossingMs(p0.t, p0.y, p1.t, p1.y, crossingY);
+                } else {
+                    tLinear = tMax;
+                }
+                return clampMs(tLinear, windowLo, windowHi);
+            }
+
+            tLinear = linearCrossingMs(pts[segI].t, pts[segI].y, pts[segI + 1].t, pts[segI + 1].y, crossingY);
+
+            const tRef = pts[pts.length - 1].t;
+            const coeffs = leastSquaresQuadraticCoeffs(pts, tRef);
+            if (!coeffs) {
+                console.log('[CoM interp] Matriz singular → fallback linear');
+                return clampMs(tLinear, windowLo, windowHi);
+            }
+            const a = coeffs[0];
+            const b = coeffs[1];
+            const c = coeffs[2];
+            const k = c - crossingY;
+            const tauLo = pts[segI].t - tRef;
+            const tauHi = pts[segI + 1].t - tRef;
+            const lo = Math.min(tauLo, tauHi) - 0.01;
+            const hi = Math.max(tauLo, tauHi) + 0.01;
+            const tauRoot = pickQuadraticRootInBracket(a, b, k, lo, hi);
+            if (tauRoot === null) {
+                console.log('[CoM interp] Raízes inválidas → fallback linear');
+                return clampMs(tLinear, windowLo, windowHi);
+            }
+            const tQuad = tRef + tauRoot;
+            if (tQuad < windowLo - 0.5 || tQuad > windowHi + 0.5) {
+                console.log('[CoM interp] Tempo fora da janela → fallback linear');
+                return clampMs(tLinear, windowLo, windowHi);
+            }
+            return clampMs(tQuad, windowLo, windowHi);
+        }
+
+        /** Retorna comprimento do fêmur (cm) do “atleta atual” ou null se indisponível (Hang Time apenas). */
+        function getFemurLengthCm() {
+            const v = currentAthleteFemurCm;
+            if (v == null || v === '') return null;
+            const n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+            if (!Number.isFinite(n) || n <= 0) return null;
+            return n;
+        }
+
+        /** Retorna px/cm = comprimento fêmur em px / comprimento informado (cm), ou null. */
+        function sampleFemurPixelsPerCm(keypoints, femurCm) {
+            if (!keypoints || keypoints.length < 17 || !(femurCm > 0)) return null;
+            const lh = kpByIndex(keypoints, 11);
+            const lk = kpByIndex(keypoints, 13);
+            const rh = kpByIndex(keypoints, 12);
+            const rk = kpByIndex(keypoints, 14);
+            const lengths = [];
+            if (lh && lk && lh.score > FEMUR_SCORE_MIN && lk.score > FEMUR_SCORE_MIN) {
+                lengths.push(Math.hypot(lh.x - lk.x, lh.y - lk.y));
+            }
+            if (rh && rk && rh.score > FEMUR_SCORE_MIN && rk.score > FEMUR_SCORE_MIN) {
+                lengths.push(Math.hypot(rh.x - rk.x, rh.y - rk.y));
+            }
+            if (lengths.length === 0) return null;
+            const femurPx = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+            return femurPx / femurCm;
+        }
+
+        function refreshDynamicPixelsPerCm() {
+            if (pixelsPerCmSamples.length === 0) {
+                dynamicPixelsPerCm = null;
+                return;
+            }
+            dynamicPixelsPerCm =
+                pixelsPerCmSamples.reduce((a, b) => a + b, 0) / pixelsPerCmSamples.length;
+        }
+
+        /**
+         * Máquina de estados do salto baseada no CoM (posição Y e Vy).
+         * Canvas: Y cresce para baixo; subida => CoM_Y diminui => Vy negativo (px/ms).
+         * Take-off / landing: instantes interpolados (parábola + fallback linear).
+         * Altura provisória: h(cm) = (g * airTime^2 / 8) * 100, airTime = (interpolatedLanding - interpolatedTakeoff) / 1000 [s].
+         */
         function processJump(keypoints) {
-            // Tenta obter posição dos pés (tornozelos ou estimativa)
-            const feetY = estimateFeetPosition(keypoints);
-            
-            if (feetY === null) {
-                // Se não conseguir estimar posição dos pés, reseta contadores
-                if (!isInAir) {
-                    feetOffGroundFrames = 0;
-                    feetOnGroundFrames = 0;
+            const COM_VY_HISTORY_LEN = 3;
+            const COM_TAKEOFF_CONSEC_FRAMES = 2;
+            const COM_LANDING_CONSEC_FRAMES = 2;
+            const COM_STANDING_BUFFER_MAX = 25;
+            const G_MS2 = 9.81;
+
+            const comY = calculateCoMY(keypoints);
+            const nowMs = performance.now();
+            if (comY == null) {
+                if (!isInAir) takeoffVyNegativeFrames = 0;
+                return;
+            }
+            pushComHistory(nowMs, comY);
+
+            let vyInstant = null;
+            if (lastCoMY !== null && lastCoMFrameTimeMs !== null) {
+                const dtMs = Math.max(1, nowMs - lastCoMFrameTimeMs);
+                vyInstant = (comY - lastCoMY) / dtMs;
+            }
+            lastCoMY = comY;
+            lastCoMFrameTimeMs = nowMs;
+
+            if (vyInstant !== null && Number.isFinite(vyInstant)) {
+                vyHistory.push(vyInstant);
+                if (vyHistory.length > COM_VY_HISTORY_LEN) vyHistory.shift();
+            }
+
+            const vySmoothed = vyHistory.length > 0
+                ? vyHistory.reduce((a, b) => a + b, 0) / vyHistory.length
+                : 0;
+
+            const ch = canvasEl ? canvasEl.height : 480;
+            const vyThreshold = -0.1 * Math.max(0.75, ch / 480);
+            const takeoffYMargin = Math.max(12, ch * 0.03);
+            const landingTolerance = Math.max(14, ch * 0.036);
+
+            if (!isInAir && autoCalibrationDone) {
+                standingComYBuffer.push(comY);
+                if (standingComYBuffer.length > COM_STANDING_BUFFER_MAX) standingComYBuffer.shift();
+                if (standingComYBuffer.length >= 10) {
+                    baselineCoMY = standingComYBuffer.reduce((a, b) => a + b, 0) / standingComYBuffer.length;
+                    if (comJumpStateLogged !== 'preparing') {
+                        comJumpStateLogged = 'preparing';
+                        logCoMJumpState('Preparando', 'baselineCoMY ≈ ' + baselineCoMY.toFixed(1) + ' px');
+                        const elPrep = document.getElementById('mainStatus');
+                        if (elPrep && isDetecting) {
+                            elPrep.innerHTML = '<i class="fas fa-user"></i> <strong>Preparando</strong> — aguardando impulsão (CoM).';
+                        }
+                    }
+                }
+                const femurCmInput = getFemurLengthCm();
+                if (femurCmInput != null) {
+                    const ppcSample = sampleFemurPixelsPerCm(keypoints, femurCmInput);
+                    if (ppcSample != null && Number.isFinite(ppcSample) && ppcSample > 0.25 && ppcSample < 20) {
+                        pixelsPerCmSamples.push(ppcSample);
+                        while (pixelsPerCmSamples.length > PIXELS_PER_CM_SAMPLES_MAX) pixelsPerCmSamples.shift();
+                        refreshDynamicPixelsPerCm();
+                    }
+                }
+            }
+
+            if (!autoCalibrationDone || baselineCoMY === null) return;
+
+            if (!isInAir) {
+                const upwardFast = vySmoothed < vyThreshold;
+                const comLifted = comY < baselineCoMY - takeoffYMargin;
+                if (upwardFast && comLifted) takeoffVyNegativeFrames++;
+                else takeoffVyNegativeFrames = 0;
+
+                if (takeoffVyNegativeFrames >= COM_TAKEOFF_CONSEC_FRAMES) {
+                    const interpolatedTakeoffTime = interpolateCoMCrossingMs(
+                        comHistoryBuffer,
+                        baselineCoMY,
+                        'decreasing'
+                    );
+                    takeoffTime = interpolatedTakeoffTime != null ? interpolatedTakeoffTime : nowMs;
+                    isInAir = true;
+                    minCoMYInFlight = getFemurLengthCm() != null ? comY : null;
+                    takeoffVyNegativeFrames = 0;
+                    standingComYBuffer.length = 0;
+                    landingConfirmedFrames = 0;
+                    resetCoMJumpKinematics();
+                    logCoMJumpState('No Ar', 'interpolatedTakeoffTime(perf)=' + takeoffTime.toFixed(2) + ' ms');
+                    console.log('[CoM interp] Take-off: baselineCoMY=' + baselineCoMY.toFixed(2) + ' px | t≈' + takeoffTime.toFixed(2) + ' ms (perf.now)');
+                    const elAir = document.getElementById('mainStatus');
+                    if (elAir) {
+                        elAir.innerHTML = '<i class="fas fa-rocket"></i> <strong>No ar</strong> (CoM) — medindo voo…';
+                    }
                 }
                 return;
             }
 
-            // Calcula a posição média dos pés (menor Y = mais alto)
-            const averageFeetY = feetY;
-            
-            // Adiciona ao histórico para suavização (mantém últimos 5 frames)
-            feetYHistory.push(averageFeetY);
-            if (feetYHistory.length > 5) {
-                feetYHistory.shift();
+            if (minCoMYInFlight !== null && Number.isFinite(comY)) {
+                minCoMYInFlight = Math.min(minCoMYInFlight, comY);
             }
-            
-            // Calcula média móvel para suavizar
-            const smoothedFeetY = feetYHistory.reduce((a, b) => a + b, 0) / feetYHistory.length;
-            
-            // Calcula velocidade (mudança de posição entre frames)
-            let velocity = 0;
-            if (lastFeetY !== null && feetYHistory.length > 1) {
-                velocity = lastFeetY - smoothedFeetY; // Positivo = subindo (Y diminuindo), Negativo = descendo
-                feetVelocityHistory.push(velocity);
-                if (feetVelocityHistory.length > 5) {
-                    feetVelocityHistory.shift();
+
+            if (comY >= baselineCoMY - landingTolerance) landingConfirmedFrames++;
+            else landingConfirmedFrames = 0;
+
+            if (landingConfirmedFrames < COM_LANDING_CONSEC_FRAMES) return;
+
+            landingConfirmedFrames = 0;
+            if (takeoffTime == null) {
+                console.warn('⚠️ CoM: aterrissagem sem takeoffTime; resetando estado.');
+                isInAir = false;
+                landingTime = null;
+                resetCoMJumpKinematics();
+                return;
+            }
+
+            const landingCrossingY = baselineCoMY - landingTolerance;
+            const interpolatedLandingTime = interpolateCoMCrossingMs(
+                comHistoryBuffer,
+                landingCrossingY,
+                'increasing'
+            );
+            landingTime = interpolatedLandingTime != null ? interpolatedLandingTime : nowMs;
+
+            logCoMJumpState('Aterrissou', 'interpolatedLandingTime(perf)=' + landingTime.toFixed(2) + ' ms');
+            console.log('[CoM interp] Landing: cruzamento y=' + landingCrossingY.toFixed(2) + ' px | t≈' + landingTime.toFixed(2) + ' ms (perf.now)');
+
+            let airTimeMs = landingTime - takeoffTime;
+            if (!Number.isFinite(airTimeMs) || airTimeMs <= 0) {
+                console.warn('[CoM interp] airTime inválido; usando último frame como fallback.');
+                airTimeMs = Math.max(1, nowMs - takeoffTime);
+                landingTime = takeoffTime + airTimeMs;
+            }
+            const airTime = airTimeMs / 1000;
+            console.log('⏱️ airTime (interp) = ' + airTimeMs.toFixed(1) + ' ms = ' + airTime.toFixed(4) + ' s');
+
+            const heightHangTimeCm = (G_MS2 * airTime * airTime / 8) * 100;
+            let heightDisplacementCm = null;
+            let ppcUsed = null;
+            if (getFemurLengthCm() != null) {
+                ppcUsed =
+                    pixelsPerCmSamples.length >= PIXELS_PER_CM_MIN_SAMPLES && dynamicPixelsPerCm != null
+                        ? dynamicPixelsPerCm
+                        : null;
+                if (ppcUsed != null && ppcUsed > 0 && minCoMYInFlight != null && baselineCoMY != null) {
+                    const dispPx = baselineCoMY - minCoMYInFlight;
+                    if (dispPx > 0) heightDisplacementCm = dispPx / ppcUsed;
                 }
             }
-            lastFeetY = smoothedFeetY;
-            
-            // Calcula velocidade média para suavizar
-            const avgVelocity = feetVelocityHistory.length > 0 
-                ? feetVelocityHistory.reduce((a, b) => a + b, 0) / feetVelocityHistory.length 
-                : 0;
-            
-            // Determina se os pés estão no chão
-            // Se não calibrou, usa um threshold padrão (85% da altura do canvas)
-            let groundLevel = calibratedGroundLevel !== null ? calibratedGroundLevel : (canvasEl.height * 0.85);
-            
-            // Adiciona uma margem de tolerância dinâmica baseada na velocidade
-            // Se estiver se movendo rápido, aumenta tolerância (mais permissivo durante movimento)
-            const baseTolerance = calibratedGroundLevel !== null ? (canvasEl.height * 0.02) : (canvasEl.height * 0.05);
-            const velocityFactor = Math.abs(avgVelocity) > 2 ? 1.5 : 1.0; // Aumenta tolerância se velocidade > 2 pixels/frame
-            const tolerance = baseTolerance * velocityFactor;
-            
-            // Pés estão no chão se: posição Y está acima do nível do chão menos tolerância
-            // OU se está descendo rápido (velocidade negativa alta) e próximo do chão
-            const distanceFromGround = smoothedFeetY - groundLevel;
-            const isMovingDownFast = avgVelocity < -3; // Descendo rápido (> 3 pixels/frame)
-            const feetOnGround = (distanceFromGround > -tolerance) || (isMovingDownFast && distanceFromGround > -tolerance * 2);
-            
-            // Log de depuração (apenas quando não está calibrado)
-            if (!autoCalibrationDone && calibratedGroundLevel === null) {
-                // Log apenas a cada 30 frames para não poluir o console
-                if (feetYHistory.length % 30 === 0) {
-                    console.log(`🔍 Aguardando calibração... pés Y: ${smoothedFeetY.toFixed(1)}, chão estimado: ${groundLevel.toFixed(1)}`);
-                }
+            const mergedHeightCm =
+                heightDisplacementCm != null && heightDisplacementCm >= 3 && heightDisplacementCm <= 100
+                    ? (heightHangTimeCm + heightDisplacementCm) / 2
+                    : heightHangTimeCm;
+            console.log('📊 Salto (CoM): hang-time h ≈ ' + heightHangTimeCm.toFixed(2) + ' cm');
+            if (getFemurLengthCm() == null) {
+                console.log('📐 Deslocamento CoM: omitido (sem currentAthleteFemurCm — Hang Time apenas).');
+            } else if (heightDisplacementCm != null) {
+                console.log('📐 Deslocamento CoM: Δy=' + (baselineCoMY - minCoMYInFlight).toFixed(1) + ' px, escala≈' + ppcUsed.toFixed(3) + ' px/cm → h ≈ ' + heightDisplacementCm.toFixed(2) + ' cm');
+            } else {
+                console.log('📐 Deslocamento CoM: indisponível (escala fêmur ou apex).');
             }
-            
-            // REQUISITOS PARA DETECTAR SAÍDA DO CHÃO:
-            // - Não estar no ar atualmente
-            // - Pés subindo (Y diminuindo) significativamente
-            // - Múltiplos frames consecutivos confirmando saída do chão
-            if (!isInAir) {
-                if (!feetOnGround) {
-                    feetOffGroundFrames++;
-                    feetOnGroundFrames = 0;
-                    
-                    // Requer pelo menos 3-5 frames consecutivos com pés fora do chão para confirmar salto
-                    // Isso evita falsos positivos por pequenos movimentos ou detecções errôneas
-                    if (feetOffGroundFrames >= 4) {
-                        // Só inicia salto se já tiver calibrado (importante!)
-                        if (autoCalibrationDone && calibratedGroundLevel !== null) {
-                            // Inicializa jumpStartFeetY se ainda não estiver definido
-                            if (jumpStartFeetY === null) {
-                                jumpStartFeetY = smoothedFeetY;
-                            }
-                            
-                            // Confirma que o salto começou
-                            isInAir = true;
-                            jumpStartTime = Date.now();
-                            jumpStartFeetY = smoothedFeetY; // Guarda a posição inicial (atualiza se necessário)
-                            maxFeetHeight = smoothedFeetY; // Inicializa altura máxima COM A POSIÇÃO ATUAL
-                            feetOffGroundFrames = 0;
-                            
-                            document.getElementById('mainStatus').innerHTML = '<i class="fas fa-rocket"></i> 🚀 SALTO DETECTADO! Medindo altura...';
-                            console.log('🚀 === SALTO INICIADO ===');
-                            console.log(`📏 Posição inicial pés Y (jumpStartFeetY): ${jumpStartFeetY.toFixed(1)}px`);
-                            console.log(`📏 Altura máxima inicial (maxFeetHeight): ${maxFeetHeight.toFixed(1)}px`);
-                            console.log(`📏 Nível do chão calibrado: ${calibratedGroundLevel.toFixed(1)}px`);
-                            console.log(`📏 Diferença inicial do chão: ${Math.abs(jumpStartFeetY - calibratedGroundLevel).toFixed(1)}px`);
-                            console.log(`📏 maxFeetHeight será atualizado conforme você sobe (Y diminui)`);
-                        } else {
-                            // Se não calibrou, avisa o usuário
-                            if (feetOffGroundFrames === 4) {
-                                console.log('⚠️ Salto detectado mas sistema ainda não calibrou. Aguarde a calibração automática.');
-                                document.getElementById('mainStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Aguarde a calibração automática antes de saltar!';
-                            }
-                        }
+            if (heightDisplacementCm != null) {
+                console.log('⚖️ Altura combinada (média Tempo|Desloc): ' + mergedHeightCm.toFixed(2) + ' cm');
+            }
+
+            if (airTime <= 0.08 || airTime >= 2.5) {
+                console.log('⚠️ Tempo no ar fora do intervalo; salto ignorado.');
+                const elBad = document.getElementById('mainStatus');
+                if (elBad && isDetecting) elBad.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Salto ignorado (tempo CoM).';
+            } else if (currentUser && currentUser.id && heightHangTimeCm >= 5 && heightHangTimeCm <= 80) {
+                const elOk = document.getElementById('mainStatus');
+                if (elOk) {
+                    if (heightDisplacementCm != null) {
+                        elOk.innerHTML =
+                            '<i class="fas fa-trophy"></i> 🎉 Altura: ' +
+                            mergedHeightCm.toFixed(1) +
+                            ' cm <span style="opacity:0.9;font-size:0.92em;">(Tempo: ' +
+                            heightHangTimeCm.toFixed(1) +
+                            ' | Desloc: ' +
+                            heightDisplacementCm.toFixed(1) +
+                            ' cm)</span> · ' +
+                            airTime.toFixed(3) +
+                            ' s';
+                    } else {
+                        elOk.innerHTML =
+                            '<i class="fas fa-trophy"></i> 🎉 Salto: ' +
+                            heightHangTimeCm.toFixed(1) +
+                            ' cm · ' +
+                            airTime.toFixed(3) +
+                            ' s';
                     }
+                }
+                const now = new Date();
+                const femurSnap = getFemurLengthCm();
+                const newJump = {
+                    id: Date.now(),
+                    athleteId: currentUser.id,
+                    height: parseFloat(mergedHeightCm.toFixed(1)),
+                    heightHangTimeCm: parseFloat(heightHangTimeCm.toFixed(2)),
+                    heightDisplacementCm:
+                        heightDisplacementCm != null ? parseFloat(heightDisplacementCm.toFixed(2)) : null,
+                    femurInputCm: femurSnap != null ? parseFloat(femurSnap.toFixed(1)) : null,
+                    pixelsPerCm: ppcUsed != null ? parseFloat(ppcUsed.toFixed(4)) : null,
+                    airTime: parseFloat(airTime.toFixed(3)),
+                    date: now.toISOString(),
+                    displayDate: now.toLocaleDateString('pt-BR')
+                };
+                if (!currentUser.jumps) currentUser.jumps = [];
+                currentUser.jumps.push(newJump);
+                saveData();
+                updateJumpHistory();
+                updateAthleteStats();
+                updateAthleteCharts();
+                updateRankings();
+                updateLiveStatus();
+                lastJumpTime = Date.now();
+                setTimeout(function () {
+                    if (!isDetecting) return;
+                    const ms = document.getElementById('mainStatus');
+                    if (!ms) return;
+                    ms.style.background = '';
+                    ms.style.border = '';
+                    ms.innerHTML = autoCalibrationDone
+                        ? '<i class="fas fa-check-circle"></i> <strong>✅ Pronto para o próximo salto!</strong>'
+                        : '<i class="fas fa-running"></i> Pronto para o próximo salto!';
+                }, 3000);
+            } else {
+                if (!currentUser || !currentUser.id) {
+                    console.warn('⚠️ Sem atleta atual; salto não salvo.');
                 } else {
-                    // Pés no chão - reseta contadores
-                    feetOffGroundFrames = 0;
-                    feetOnGroundFrames++;
+                    console.log('⚠️ Altura (hang-time) fora da faixa: ' + heightHangTimeCm.toFixed(1) + ' cm');
                 }
-            } 
-            // REQUISITOS PARA DETECTAR RETORNO AO CHÃO:
-            // - Estar no ar atualmente
-            // - Rastrear altura máxima dos pés durante o salto
-            // - Múltiplos frames consecutivos confirmando pés no chão
-            else if (isInAir) {
-                // Rastreia a altura máxima dos pés (menor Y = mais alto)
-                // IMPORTANTE: Se maxFeetHeight ainda não foi inicializado, inicializa
-                if (maxFeetHeight === null) {
-                    maxFeetHeight = smoothedFeetY;
-                    console.log(`🎯 Inicializando maxFeetHeight: ${maxFeetHeight.toFixed(1)}px`);
+                const elDisc = document.getElementById('mainStatus');
+                if (elDisc && isDetecting) {
+                    elDisc.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Salto descartado (ver faixa 5–80 cm ou sessão).';
                 }
-                
-                // Atualiza altura máxima se os pés subiram mais
-                if (smoothedFeetY < maxFeetHeight) {
-                    const oldMax = maxFeetHeight;
-                    maxFeetHeight = smoothedFeetY;
-                    console.log(`⬆️ Nova altura máxima: ${maxFeetHeight.toFixed(1)}px (subiu ${(oldMax - maxFeetHeight).toFixed(1)}px)`);
-                }
-                
-                // Log periódico durante o salto para debug
-                if (feetOnGroundFrames === 0 && (Date.now() - jumpStartTime) % 200 < 50) {
-                    console.log(`📊 Em voo: Y atual=${smoothedFeetY.toFixed(1)}px, Y máxima=${maxFeetHeight.toFixed(1)}px, diferença=${(jumpStartFeetY - maxFeetHeight).toFixed(1)}px`);
-                }
-                
-                if (feetOnGround) {
-                    feetOnGroundFrames++;
-                    feetOffGroundFrames = 0;
-                    
-                    // Requer pelo menos 5-8 frames consecutivos com pés no chão para confirmar aterrissagem
-                    // Isso evita detecções prematuras durante o movimento de descida
-                    if (feetOnGroundFrames >= 6) {
-                        const airTime = (Date.now() - jumpStartTime) / 1000;
-                        
-                        // Validação do salto: tempo no ar razoável
-                        if (airTime > 0.15 && airTime < 2.0) {
-                            // Calcula altura em pixels (diferença entre posição inicial e máxima)
-                            // jumpStartFeetY é maior (mais baixo) e maxFeetHeight é menor (mais alto)
-                            const jumpHeightPixels = jumpStartFeetY - maxFeetHeight;
-                            
-                            // LOGS DETALHADOS PARA DEBUG
-                            console.log('📊 === CÁLCULO DE ALTURA DO SALTO ===');
-                            console.log(`📏 Posição inicial (jumpStartFeetY): ${jumpStartFeetY.toFixed(1)}px`);
-                            console.log(`📏 Altura máxima (maxFeetHeight): ${maxFeetHeight.toFixed(1)}px`);
-                            console.log(`📏 Altura do salto em pixels: ${jumpHeightPixels.toFixed(1)}px`);
-                            console.log(`📏 Tempo no ar: ${airTime.toFixed(3)}s`);
-                            console.log(`📏 Calibração altura: ${calibrationHeight ? calibrationHeight.toFixed(1) + 'cm' : 'não disponível'}`);
-                            console.log(`📏 Calibração pixels corpo: ${calibratedBodyHeightPixels ? calibratedBodyHeightPixels.toFixed(1) + 'px' : 'não disponível'}`);
-                            
-                            // Valida que a altura em pixels é positiva
-                            if (jumpHeightPixels <= 0) {
-                                console.error('❌ ERRO: Altura do salto em pixels é zero ou negativa!');
-                                console.error(`   Posição inicial: ${jumpStartFeetY.toFixed(1)}px`);
-                                console.error(`   Posição máxima: ${maxFeetHeight.toFixed(1)}px`);
-                                console.error(`   Isso significa que os pés não subiram ou maxFeetHeight não foi atualizado.`);
-                                
-                                // Tenta usar apenas fórmula física como fallback
-                                const g = 9.8;
-                                const t_half = airTime / 2;
-                                const fallbackHeight = (0.5 * g * Math.pow(t_half, 2)) * 100;
-                                console.log(`⚡ Usando fórmula física como fallback: ${fallbackHeight.toFixed(1)}cm`);
-                                
-                                // Usa fallback se for válido
-                                if (fallbackHeight >= 5 && fallbackHeight <= 80) {
-                                    document.getElementById('mainStatus').innerHTML = `<i class="fas fa-trophy"></i> 🎉 Salto registrado: ${fallbackHeight.toFixed(1)} cm! (${airTime.toFixed(2)}s no ar)`;
-                                    
-                                    const now = new Date();
-                                    const newJump = {
-                                        id: Date.now(),
-                                        athleteId: currentUser.id,
-                                        height: parseFloat(fallbackHeight.toFixed(1)),
-                                        airTime: parseFloat(airTime.toFixed(2)),
-                                        date: now.toISOString(),
-                                        displayDate: now.toLocaleDateString('pt-BR')
-                                    };
-                                    
-                                    if (!currentUser.jumps) currentUser.jumps = [];
-                                    currentUser.jumps.push(newJump);
-                                    
-                                    saveData();
-                                    updateJumpHistory();
-                                    updateAthleteStats();
-                                    updateAthleteCharts();
-                                    updateRankings();
-                                    updateLiveStatus();
-                                    
-                                    console.log(`✅ Salto registrado usando fórmula física: ${fallbackHeight.toFixed(1)}cm`);
-                                } else {
-                                    console.error(`❌ Altura do fallback também inválida: ${fallbackHeight.toFixed(1)}cm`);
-                                    document.getElementById('mainStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao calcular altura do salto. Verifique console.';
-                                }
-                                
-                                // Reset
-                                isInAir = false;
-                                jumpStartTime = null;
-                                jumpStartFeetY = null;
-                                maxFeetHeight = null;
-                                feetOffGroundFrames = 0;
-                                feetOnGroundFrames = 0;
-                                lastJumpTime = Date.now();
-                                calibrationLocked = true;
-                                return;
-                            }
-                            
-                            // Converte pixels para centímetros usando calibração precisa
-                            let height = 0;
-                            
-                            // MÉTODO 1: Usa altura total do corpo calibrada (mais preciso)
-                            if (calibrationHeight && calibratedBodyHeightPixels && calibratedBodyHeightPixels > 0) {
-                                // Calcula quantos centímetros cada pixel representa
-                                const pixelsPerCm = calibratedBodyHeightPixels / calibrationHeight;
-                                // Converte altura do salto em pixels para centímetros
-                                height = jumpHeightPixels / pixelsPerCm;
-                                
-                                console.log(`✅ MÉTODO 1 (Calibração): ${calibrationHeight}cm = ${calibratedBodyHeightPixels.toFixed(1)}px`);
-                                console.log(`   └─ Conversão: ${pixelsPerCm.toFixed(3)}px/cm`);
-                                console.log(`   └─ Altura do salto: ${jumpHeightPixels.toFixed(1)}px ÷ ${pixelsPerCm.toFixed(3)}px/cm = ${height.toFixed(1)}cm`);
-                            }
-                            // MÉTODO 2: Se não tiver altura do corpo calibrada, usa fórmula física
-                            else {
-                                console.log('⚠️ Calibração não disponível, usando fórmula física');
-                                // Fórmula física para altura do salto baseada no tempo no ar
-                                // h = (1/2) * g * (t/2)^2 onde:
-                                // g = 9.8 m/s² (aceleração da gravidade)
-                                // t/2 = metade do tempo (apenas a subida ou descida)
-                                // Multiplica por 100 para converter metros para centímetros
-                                const g = 9.8; // m/s²
-                                const t_half = airTime / 2; // tempo de subida (ou descida)
-                                height = (0.5 * g * Math.pow(t_half, 2)) * 100;
-                                
-                                console.log(`⚡ MÉTODO 2 (Física): t=${airTime.toFixed(3)}s → h=${height.toFixed(1)}cm`);
-                                console.log(`   └─ Cálculo: h = 0.5 × 9.8 × (${t_half.toFixed(3)})² × 100`);
-                            }
-                            
-                            // Validação: altura deve estar entre 5cm e 80cm (realista para saltos parados)
-                            // Saltos parados profissionais: 50-70cm para atletas de elite
-                            // Saltos normais: 20-50cm
-                            if (height >= 5 && height <= 80) {
-                                document.getElementById('mainStatus').innerHTML = `<i class="fas fa-trophy"></i> 🎉 Salto registrado: ${height.toFixed(1)} cm! (${airTime.toFixed(2)}s no ar)`;
-                                
-                                const now = new Date();
-                                const newJump = {
-                                    id: Date.now(),
-                                    athleteId: currentUser.id,
-                                    height: parseFloat(height.toFixed(1)),
-                                    airTime: parseFloat(airTime.toFixed(2)),
-                                    date: now.toISOString(),
-                                    displayDate: now.toLocaleDateString('pt-BR')
-                                };
-                                
-                                // Garante que o array de saltos existe
-                                if (!currentUser.jumps) currentUser.jumps = [];
-                                currentUser.jumps.push(newJump);
-                                
-                                // Salva os dados e atualiza a interface
-                                saveData();
-                                updateJumpHistory();
-                                updateAthleteStats();
-                                updateAthleteCharts();
-                                updateRankings();
-                                updateLiveStatus();
-                                
-                                console.log(`✅ Salto registrado: ${height.toFixed(1)}cm | Tempo: ${airTime.toFixed(2)}s | Altura em pixels: ${jumpHeightPixels.toFixed(1)}px`);
-                                
-                                // Registra tempo do último salto para evitar recalibração imediata
-                                lastJumpTime = Date.now();
-                                
-                                // Reset variáveis IMEDIATAMENTE para permitir novo salto
-                                isInAir = false;
-                                jumpStartTime = null;
-                                jumpStartFeetY = null;
-                                maxFeetHeight = null;
-                                feetOffGroundFrames = 0;
-                                feetOnGroundFrames = 0;
-                                
-                                // Garante que a calibração continua bloqueada após salto
-                                calibrationLocked = true;
-                                console.log('🔒 Sistema pronto para próximo salto - calibração mantida');
-                                
-                                // Reset variáveis após timeout para mensagem
-                                setTimeout(() => {
-                                    if (isDetecting) {
-                                        // Remove estilo especial da mensagem de calibração
-                                        document.getElementById('mainStatus').style.background = '';
-                                        document.getElementById('mainStatus').style.border = '';
-                                        if (autoCalibrationDone) {
-                                            document.getElementById('mainStatus').innerHTML = '<i class="fas fa-check-circle"></i> <strong>✅ Pronto para o próximo salto!</strong>';
-                                        } else {
-                                            document.getElementById('mainStatus').innerHTML = '<i class="fas fa-running"></i> Pronto para o próximo salto!';
-                                        }
-                                    }
-                                }, 3000);
-                            } else {
-                                console.log(`⚠️ Salto descartado: altura inválida (${height.toFixed(1)}cm). Altura deve estar entre 5cm e 80cm.`);
-                                document.getElementById('mainStatus').innerHTML = `<i class="fas fa-exclamation-triangle"></i> Salto descartado: altura inválida (${height.toFixed(1)}cm). Verifique a calibração.`;
-                                setTimeout(() => {
-                                    if (isDetecting) {
-                                        document.getElementById('mainStatus').innerHTML = '<i class="fas fa-running"></i> Pronto para o próximo salto!';
-                                    }
-                                }, 3000);
-                            }
-                        }
-                        
-                        // Reseta estado do salto (mesmo se o salto foi descartado)
-                        isInAir = false;
-                        jumpStartTime = null;
-                        jumpStartFeetY = null;
-                        maxFeetHeight = null;
-                        feetOffGroundFrames = 0;
-                        feetOnGroundFrames = 0;
-                        console.log('🔄 Estado do salto resetado. Pronto para detectar novo salto.');
-                    }
-                } else {
-                    // Ainda no ar, mas não tocou o chão ainda
-                    feetOnGroundFrames = 0;
-                }
+                setTimeout(function () {
+                    if (!isDetecting) return;
+                    const ms2 = document.getElementById('mainStatus');
+                    if (ms2) ms2.innerHTML = '<i class="fas fa-running"></i> Pronto para o próximo salto!';
+                }, 3000);
             }
+
+            isInAir = false;
+            takeoffTime = null;
+            landingTime = null;
+            resetCoMJumpKinematics();
+            comHistoryBuffer.length = 0;
+            minCoMYInFlight = null;
+            comJumpStateLogged = '';
+            calibrationLocked = true;
+            console.log('🔄 Ciclo CoM concluído; aguardando novo salto.');
         }
 
         // --- INICIALIZAÇÃO ---
@@ -3801,6 +4372,23 @@
                 startBtn.disabled = true;
             }
             
+            let resizeChartsTimer;
+            function resizeAllCharts() {
+                if (typeof Chart === 'undefined') return;
+                document.querySelectorAll('canvas').forEach(canvas => {
+                    const chart = typeof Chart.getChart === 'function' ? Chart.getChart(canvas) : null;
+                    if (chart && typeof chart.resize === 'function') {
+                        try { chart.resize(); } catch (e) { /* ignore */ }
+                    }
+                });
+            }
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeChartsTimer);
+                resizeChartsTimer = setTimeout(resizeAllCharts, 150);
+            });
+            window.addEventListener('orientationchange', () => {
+                setTimeout(resizeAllCharts, 350);
+            });
         });
         
         // Função para forçar atualização dos dashboards
