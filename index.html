@@ -3656,12 +3656,14 @@
 
         async function startDetection() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        width: 640, 
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        width: 640,
                         height: 480,
-                        facingMode: 'user'
-                    } 
+                        facingMode: 'user',
+                        frameRate: { ideal: 60, max: 120 }
+                    }
                 });
                 
                 videoEl.srcObject = stream;
